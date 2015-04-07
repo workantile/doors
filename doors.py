@@ -1,26 +1,43 @@
 #!/usr/bin/python
 
-####################
-#                  #
-# Define GPIO Pins #
-#                  #
-####################
 
+import socket
+##################
+#                #
+# Default values #
+#                #
+##################
+
+CONTROLLER  = socket.gethostname()
+SERVER      = "localhost"
+RFID_PATH   = "/dev/ttyUSB0"
 RED_LED     = 11
 GREEN_LED   = 13
 DOOR_STRIKE = 15
 
 
 
+import os
+####################
+#                  #
+# Read doorrc file #
+#                  #
+####################
+
+for conf in [ "/etc/doorrc", "./doorrc" ]:
+    if os.path.exists(conf):
+        with open(conf) as f:
+            exec(compile(f.read(), "doorrc", 'exec'))
+
+
+
+import atexit
+import RPi.GPIO as GPIO
 ####################
 #                  #
 # Set up GPIO Pins #
 #                  #
 ####################
-
-import atexit
-import RPi.GPIO as GPIO
-import time
 
 GPIO.setmode(GPIO.BOARD)
 atexit.register(GPIO.cleanup)
@@ -53,36 +70,30 @@ def close_door():
 
 
 
+import time
+#python-pyserial package. Not sure we need this. Grabbed based on
+#http://allenmlabs.blogspot.se/2013/01/raspberry-pi-parallax-rfid-reader.html
+import serial
 ######################
 #                    #
 # Set up RFID Reader #
 #                    #
 ######################
-#python-pyserial package. Not sure we need this. Grabbed based on
-#http://allenmlabs.blogspot.se/2013/01/raspberry-pi-parallax-rfid-reader.html
-import serial
 
-#Find the RFID as a USB device
-#TODO: script should find it if not at USB0
-RFID_SERIAL = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
+RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
 
 
 
+from urllib import request
 #############################################
 #                                           #
 # Verify a key with openings.workantile.com #
 #                                           #
 #############################################
 
-from urllib import request
-
-# Which door controller are we?
-CONTROLLER="deadbeef01"
-
-
 # Blocks for 5 seconds before resetting the door
 def verify_key(key):
-    url = "http://openings.workantile.com/access/%s/%s" % (CONTROLLER, key)
+    url = SERVER + ("/%s" % key)
     if request.urlopen(url).read().decode() == "OK":
         open_door()
         time.sleep(5)
