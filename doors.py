@@ -98,7 +98,6 @@ def verify_key(key):
         open_door()
         time.sleep(5)
     close_door()
-    RFID_SERIAL.flushInput() # ignore errors, no data
 
 
 while True:
@@ -110,3 +109,4 @@ while True:
         key = string[1:11] #exclude start x0A and stop x0D bytes
         print(key)
         verify_key(key)
+        RFID_SERIAL.flushInput() # ignore errors, no data
