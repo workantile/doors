@@ -76,9 +76,6 @@ RFID_SERIAL = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
 
 from urllib import request
 
-# Anna's key
-KEY="1F00D0B045"
-
 # Which door controller are we?
 CONTROLLER="deadbeef01"
 
@@ -93,15 +90,12 @@ def verify_key(key):
     RFID_SERIAL.flushInput() # ignore errors, no data
 
 
-import sys
-#sys.exit(0)
-
 while True:
-    string = RFID_SERIAL.read(12)   
+    string = RFID_SERIAL.read(12)
     if len(string) == 0:
             print("No tag read")
             continue
     else:
-        string = string[1:11] #exclude start x0A and stop x0D bytes
-        print(string)
-        verify_key(KEY)
+        key = string[1:11] #exclude start x0A and stop x0D bytes
+        print(key)
+        verify_key(key)
