@@ -10,6 +10,8 @@ RED_LED     = 11
 GREEN_LED   = 13
 DOOR_STRIKE = 15
 
+
+
 ####################
 #                  #
 # Set up GPIO Pins #
@@ -19,14 +21,6 @@ DOOR_STRIKE = 15
 import atexit
 import RPi.GPIO as GPIO
 import time
-
-#python-pyserial package. Not sure we need this. Grabbed based on
-#http://allenmlabs.blogspot.se/2013/01/raspberry-pi-parallax-rfid-reader.html
-import serial
-
-#Find the RFID as a USB device
-#TODO: script should find it if not at USB0
-RFID_SERIAL = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
 
 GPIO.setmode(GPIO.BOARD)
 atexit.register(GPIO.cleanup)
@@ -56,6 +50,23 @@ def close_door():
     GPIO.output(DOOR_STRIKE, lowVoltage)
     GPIO.output(GREEN_LED, lowVoltage)
     GPIO.output(RED_LED, highVoltage)
+
+
+
+######################
+#                    #
+# Set up RFID Reader #
+#                    #
+######################
+#python-pyserial package. Not sure we need this. Grabbed based on
+#http://allenmlabs.blogspot.se/2013/01/raspberry-pi-parallax-rfid-reader.html
+import serial
+
+#Find the RFID as a USB device
+#TODO: script should find it if not at USB0
+RFID_SERIAL = serial.Serial('/dev/ttyUSB0', 2400, timeout=1)
+
+
 
 #############################################
 #                                           #
