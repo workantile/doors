@@ -71,19 +71,6 @@ def close_door():
 
 
 import time
-#python-pyserial package. Not sure we need this. Grabbed based on
-#http://allenmlabs.blogspot.se/2013/01/raspberry-pi-parallax-rfid-reader.html
-import serial
-######################
-#                    #
-# Set up RFID Reader #
-#                    #
-######################
-
-RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
-
-
-
 from urllib import request
 #############################################
 #                                           #
@@ -100,11 +87,23 @@ def verify_key(key):
     close_door()
 
 
+
+#python-pyserial package. Not sure we need this. Grabbed based on
+#http://allenmlabs.blogspot.se/2013/01/raspberry-pi-parallax-rfid-reader.html
+import serial
+###################
+#                 #
+# Run RFID Reader #
+#                 #
+###################
+
+RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
+
 while True:
     string = RFID_SERIAL.read(12)
     if len(string) == 0:
-            print("No tag read")
-            continue
+        print("No tag read")
+        continue
     else:
         key = string[1:11] #exclude start x0A and stop x0D bytes
         print(key)
