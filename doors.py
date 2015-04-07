@@ -80,10 +80,10 @@ from urllib import request
 
 # Blocks for 5 seconds before resetting the door
 def verify_key(key):
-    url = SERVER + ("/%s" % key)
-    if request.urlopen(url).read().decode() == "OK":
-        open_door()
-        time.sleep(5)
+    with request.urlopen(SERVER + ("/%s" % key)) as f:
+        if f.read().decode() == "OK":
+            open_door()
+            time.sleep(5)
     close_door()
 
 
