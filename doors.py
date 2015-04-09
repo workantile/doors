@@ -24,10 +24,10 @@ import os
 #                  #
 ####################
 
-for conf in [ "/etc/doorrc", "./doorrc" ]:
+for conf in [ "/etc/doorsrc", "./doorsrc" ]:
     if os.path.exists(conf):
         with open(conf) as f:
-            exec(compile(f.read(), "doorrc", 'exec'))
+            exec(compile(f.read(), "doorsrc", 'exec'))
 
 
 
