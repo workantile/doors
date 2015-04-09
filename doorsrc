@@ -1,13 +1,14 @@
 
 # Name of this Raspberry Pi unit
+# default = `hostname`
 #CONTROLLER="deadbeef01"
-CONTROLLER="sidedoor"
 
 # Server to send requests to
 SERVER = "http://openings.workantile.com/access/" + CONTROLLER
 
 # Set path to RFID reader
-RFID_PATH = "/dev/ttyUSB0"
+# default = "/dev/ttyUSB0"
+#RFID_PATH = "/dev/ttyUSB0"
 
 # Set Raspberry Pi GPIO pin numbers
 RED_LED     = 11
