@@ -99,13 +99,20 @@ import serial
 
 RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
 
-while True:
+def read_rfid():
     string = RFID_SERIAL.read(12)
     if len(string) == 0:
         print("No tag read")
-        continue
+        #continue
     else:
-        key = string[1:11] #exclude start x0A and stop x0D bytes
+        key = string[1:11].decode() #exclude start x0A and stop x0D bytes
         print(key)
         verify_key(key)
         RFID_SERIAL.flushInput() # ignore errors, no data
+
+
+while True:
+    try:
+        read_rfid()
+    except Exception(e):
+        print(e)

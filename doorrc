@@ -1,6 +1,7 @@
 
 # Name of this Raspberry Pi unit
-CONTROLLER="deadbeef01"
+#CONTROLLER="deadbeef01"
+CONTROLLER="sidedoor"
 
 # Server to send requests to
 SERVER = "http://openings.workantile.com/access/" + CONTROLLER
