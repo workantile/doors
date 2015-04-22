@@ -11,6 +11,7 @@ SERVER = "http://openings.workantile.com/access/" + CONTROLLER
 #RFID_PATH = "/dev/ttyUSB0"
 
 # Set Raspberry Pi GPIO pin numbers
+YELLOW_LED  = 7
 RED_LED     = 11
 GREEN_LED   = 13
 DOOR_STRIKE = 15

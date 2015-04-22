@@ -11,6 +11,7 @@ import socket
 CONTROLLER  = socket.gethostname()
 SERVER      = "localhost"
 RFID_PATH   = "/dev/ttyUSB0"
+YELLOW_LED  = 7
 RED_LED     = 11
 GREEN_LED   = 13
 DOOR_STRIKE = 15
@@ -45,6 +46,7 @@ atexit.register(GPIO.cleanup)
 GPIO.setup(DOOR_STRIKE, GPIO.OUT)
 GPIO.setup(RED_LED, GPIO.OUT)
 GPIO.setup(GREEN_LED, GPIO.OUT)
+GPIO.setup(YELLOW_LED, GPIO.OUT)
 
 #Be explicit with what we want
 #lowVoltage of 0 is ground
@@ -80,10 +82,13 @@ from urllib import request
 
 # Blocks for 5 seconds before resetting the door
 def verify_key(key):
+    GPIO.output(YELLOW_LED, highVoltage);
     with request.urlopen(SERVER + ("/%s" % key)) as f:
         if f.read().decode() == "OK":
+            GPIO.output(YELLOW_LED, lowVoltage);
             open_door()
             time.sleep(5)
+    GPIO.output(YELLOW_LED, lowVoltage);
     close_door()
 
 
