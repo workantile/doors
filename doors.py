@@ -48,27 +48,30 @@ GPIO.setup(RED_LED, GPIO.OUT)
 GPIO.setup(GREEN_LED, GPIO.OUT)
 GPIO.setup(YELLOW_LED, GPIO.OUT)
 
-#Be explicit with what we want
-#lowVoltage of 0 is ground
-lowVoltage = 0
-highVoltage = 1
 
-#Pull Enable Pin Low to make it readable
-GPIO.output(DOOR_STRIKE, lowVoltage)
+#Be explicit with what we want
+OFF = 0  # Low voltage, ground
+ON  = 1  # High voltage
+
 
 #When door is open
 def open_door():
     print("Door is open");
-    GPIO.output(GREEN_LED, highVoltage)
-    GPIO.output(RED_LED, lowVoltage)
-    GPIO.output(DOOR_STRIKE, highVoltage)
+    GPIO.output(DOOR_STRIKE, ON)
+    GPIO.output(RED_LED, OFF)
+    GPIO.output(GREEN_LED, ON)
+    GPIO.output(YELLOW_LED, OFF)
 
 #When door is closed and locked
 def close_door():
     print("Door is closed");
-    GPIO.output(DOOR_STRIKE, lowVoltage)
-    GPIO.output(GREEN_LED, lowVoltage)
-    GPIO.output(RED_LED, highVoltage)
+    GPIO.output(DOOR_STRIKE, OFF)
+    GPIO.output(RED_LED, ON)
+    GPIO.output(GREEN_LED, OFF)
+    GPIO.output(YELLOW_LED, OFF);
+
+close_door()
+GPIO.output(YELLOW_LED, OFF)
 
 
 
@@ -82,13 +85,11 @@ from urllib import request
 
 # Blocks for 5 seconds before resetting the door
 def verify_key(key):
-    GPIO.output(YELLOW_LED, highVoltage);
+    GPIO.output(YELLOW_LED, ON);
     with request.urlopen(SERVER + ("/%s" % key)) as f:
         if f.read().decode() == "OK":
-            GPIO.output(YELLOW_LED, lowVoltage);
             open_door()
             time.sleep(5)
-    GPIO.output(YELLOW_LED, lowVoltage);
     close_door()
 
 
@@ -120,4 +121,5 @@ while True:
     try:
         read_rfid()
     except Exception(e):
+        door_close()
         print(e)
