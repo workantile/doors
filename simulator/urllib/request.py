@@ -13,10 +13,12 @@ class Request:
 		pass
 
 	def read(self):
-		if random.randint(0, 1) == 0:
+		val = random.randint(0, 2)
+		if val == 0:
 			return "OK".encode()
-		return "ERROR".encode()
-
+		elif val == 1:
+			return "ERROR".encode()
+		raise Exception('Test Exception')
 
 
 def urlopen(url):
