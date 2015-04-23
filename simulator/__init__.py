@@ -1,4 +1,5 @@
 
+import importlib
 import os
 import sys
 #######################################################
@@ -9,7 +10,18 @@ import sys
 sys.path.insert(0, os.path.join(os.getcwd(), "simulator"))
 
 
-
-print("Welcome to the Workantile Door System Simulator!")
 import doors
 from doors import *
+
+
+def reload_sim(namespace):
+    importlib.reload(GPIO)
+    importlib.reload(request)
+    importlib.reload(serial)
+    importlib.reload(doors)
+    namespace.update(doors.__dict__)
+
+
+print("")
+print("Welcome to the Workantile Door System Simulator!")
+print("Hint: call reload() to reload the simulator with updated code.")
