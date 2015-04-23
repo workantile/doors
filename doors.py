@@ -12,8 +12,8 @@ CONTROLLER  = socket.gethostname()
 SERVER      = "localhost"
 RFID_PATH   = "/dev/ttyUSB0"
 YELLOW_LED  = 7
-RED_LED     = 11
-GREEN_LED   = 13
+GREEN_LED   = 11
+RED_LED     = 13
 DOOR_STRIKE = 15
 
 
