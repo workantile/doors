@@ -117,9 +117,14 @@ def read_rfid():
         RFID_SERIAL.flushInput() # ignore errors, no data
 
 
-while True:
-    try:
-        read_rfid()
-    except Exception(e):
-        door_close()
-        print(e)
+
+def main():
+    while True:
+        try:
+            read_rfid()
+        except Exception as e:
+            door_close()
+            print(e)
+
+
+if __name__ == "__main__": main()
