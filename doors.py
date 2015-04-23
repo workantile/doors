@@ -62,8 +62,8 @@ def unlock_door():
     GPIO.output(YELLOW_LED, OFF)
 
 #When door is closed and locked
-def close_door():
-    print("Door is closed");
+def lock_door():
+    print("Door is locked");
     GPIO.output(DOOR_STRIKE, OFF)
     GPIO.output(RED_LED, ON)
     GPIO.output(GREEN_LED, OFF)
@@ -81,7 +81,7 @@ def leds_off():
     GPIO.output(GREEN_LED, OFF)
     GPIO.output(YELLOW_LED, OFF)
 
-close_door()
+lock_door()
 
 
 
@@ -100,8 +100,7 @@ def verify_key(key):
         if f.read().decode() == "OK":
             unlock_door()
             time.sleep(5)
-    close_door()
-
+    lock_door()
 
 
 #python-pyserial package. Not sure we need this. Grabbed based on
@@ -134,7 +133,7 @@ def blink_leds():
         else:
             leds_off()
         time.sleep(1)
-    close_door()
+    lock_door()
 
 
 def main():
@@ -143,7 +142,7 @@ def main():
             read_rfid()
         except Exception as e:
             print(e)
-            close_door()
+            lock_door()
             blink_leds()
 
 
