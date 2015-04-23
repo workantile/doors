@@ -54,9 +54,8 @@ OFF = 0  # Low voltage, ground
 ON  = 1  # High voltage
 
 
-#When door is open
-def open_door():
-    print("Door is open");
+def unlock_door():
+    print("Door is unlocked");
     GPIO.output(DOOR_STRIKE, ON)
     GPIO.output(RED_LED, OFF)
     GPIO.output(GREEN_LED, ON)
@@ -99,7 +98,7 @@ def verify_key(key):
     GPIO.output(YELLOW_LED, ON);
     with request.urlopen(SERVER + ("/%s" % key)) as f:
         if f.read().decode() == "OK":
-            open_door()
+            unlock_door()
             time.sleep(5)
     close_door()
 
