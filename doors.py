@@ -80,6 +80,16 @@ def leds_off():
     GPIO.output(GREEN_LED, OFF)
     GPIO.output(YELLOW_LED, OFF)
 
+def blink_leds():
+    print("Blinking LEDs")
+    for i in range(5):
+        if (i % 2) == 0:
+            leds_on()
+        else:
+            leds_off()
+        time.sleep(1)
+    lock_door()
+
 lock_door()
 
 
@@ -113,36 +123,29 @@ import serial
 
 RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
 
-def read_rfid():
+def _do_read_rfid():
     string = RFID_SERIAL.read(12)
     if len(string) == 0:
         print("No tag read")
-        #continue
     else:
         key = string[1:11].decode() #exclude start x0A and stop x0D bytes
         print(key)
         verify_key(key)
         RFID_SERIAL.flushInput() # ignore errors, no data
 
-
-def blink_leds():
-    for i in range(5):
-        if (i % 2) == 0:
-            leds_on()
-        else:
-            leds_off()
-        time.sleep(1)
-    lock_door()
+def read_rfid():
+    try:
+        _do_read_rfid()
+    except Exception as e:
+        print(e)
+        lock_door()
+        blink_leds()
 
 
-def main():
+
+def loop():
     while True:
-        try:
-            read_rfid()
-        except Exception as e:
-            print(e)
-            lock_door()
-            blink_leds()
+        read_rfid()
 
-
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    loop()
