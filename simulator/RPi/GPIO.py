@@ -3,12 +3,14 @@ print("Using fake GPIO driver.")
 BOARD = "board"
 IN    = "input"
 OUT   = "output"
+HIGH  = 1
+LOW   = 0
 
 def cleanup():
 	print("> GPIO: cleaning up!")
 
 def output(pin, voltage):
-	state = "on" if (voltage == 1) else "off"
+	state = "ON" if (voltage == HIGH) else "OFF"
 	print("> GPIO setting pin %s to %s." % (pin, state))
 
 def setmode(mode):

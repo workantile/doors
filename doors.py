@@ -49,9 +49,8 @@ GPIO.setup(GREEN_LED, GPIO.OUT)
 GPIO.setup(YELLOW_LED, GPIO.OUT)
 
 
-#Be explicit with what we want
-OFF = 0  # Low voltage, ground
-ON  = 1  # High voltage
+OFF = GPIO.LOW
+ON  = GPIO.HIGH
 
 
 def unlock_door():
