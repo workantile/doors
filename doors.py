@@ -60,13 +60,13 @@ def unlock_door():
     GPIO.output(GREEN_LED, ON)
     GPIO.output(YELLOW_LED, OFF)
 
-#When door is closed and locked
 def lock_door():
     print("Door is locked");
     GPIO.output(DOOR_STRIKE, OFF)
     GPIO.output(RED_LED, ON)
     GPIO.output(GREEN_LED, OFF)
     GPIO.output(YELLOW_LED, OFF);
+lock_door()
 
 # Turn all LEDs on
 def leds_on():
@@ -90,7 +90,6 @@ def blink_leds():
         time.sleep(1)
     lock_door()
 
-lock_door()
 
 
 
