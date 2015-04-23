@@ -70,8 +70,19 @@ def close_door():
     GPIO.output(GREEN_LED, OFF)
     GPIO.output(YELLOW_LED, OFF);
 
+# Turn all LEDs on
+def leds_on():
+    GPIO.output(RED_LED, ON)
+    GPIO.output(GREEN_LED, ON)
+    GPIO.output(YELLOW_LED, ON)
+
+# Turn all LEDs off
+def leds_off():
+    GPIO.output(RED_LED, OFF)
+    GPIO.output(GREEN_LED, OFF)
+    GPIO.output(YELLOW_LED, OFF)
+
 close_door()
-GPIO.output(YELLOW_LED, OFF)
 
 
 
@@ -117,14 +128,24 @@ def read_rfid():
         RFID_SERIAL.flushInput() # ignore errors, no data
 
 
+def blink_leds():
+    for i in range(5):
+        if (i % 2) == 0:
+            leds_on()
+        else:
+            leds_off()
+        time.sleep(1)
+    close_door()
+
 
 def main():
     while True:
         try:
             read_rfid()
         except Exception as e:
-            door_close()
             print(e)
+            close_door()
+            blink_leds()
 
 
 if __name__ == "__main__": main()
