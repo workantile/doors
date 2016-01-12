@@ -100,15 +100,38 @@ from urllib import request
 # Verify a key with openings.workantile.com #
 #                                           #
 #############################################
+CACHED_KEYS = set()
+NEED_PING   = []
+
+def ping_server(key):
+    print("Pinging server with key: %s" % key)
+    with request.urlopen(SERVER + ("/%s" % key)) as f:
+        if f.read().decode() == "OK":
+            CACHED_KEYS.add(key)
+            return True
+        else:
+            CACHED_KEYS.remove(key)
+    return False
+
+def valid_key(key):
+    if key in CACHED_KEYS:
+        print("Using cached key")
+        NEED_PING.append(key)
+        return True
+    return ping_server(key)
 
 # Blocks for 5 seconds before resetting the door
 def verify_key(key):
     GPIO.output(YELLOW_LED, ON);
-    with request.urlopen(SERVER + ("/%s" % key)) as f:
-        if f.read().decode() == "OK":
-            unlock_door()
-            time.sleep(5)
+    if valid_key(key) == True:
+        unlock_door()
+        time.sleep(5)
     lock_door()
+
+def ping_keys():
+    while len(NEED_PING) > 0:
+        ping_server(NEED_PING[0])
+        NEED_PING.pop(0)
 
 
 #python-pyserial package. Not sure we need this. Grabbed based on
@@ -128,8 +151,9 @@ def _do_read_rfid():
         print("No tag read")
     else:
         key = string[1:11].decode() #exclude start x0A and stop x0D bytes
-        print(key)
+        print("Read key: %s" % key)
         verify_key(key)
+        ping_keys()
         RFID_SERIAL.flushInput() # ignore errors, no data
 
 def read_rfid():
