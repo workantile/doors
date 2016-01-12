@@ -13,11 +13,11 @@ class Request:
 		pass
 
 	def read(self):
-		val = random.randint(0, 4)
-		if val == 0 or val == 1:
-			return "OK".encode()
-		elif val == 2 or val == 3:
+		val = random.randint(0, 5)
+		if val == 0:
 			return "ERROR".encode()
+		elif val < 4:
+			return "OK".encode()
 		raise Exception("Test Network Exception")
 
 
