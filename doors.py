@@ -94,6 +94,7 @@ def blink_leds():
 
 
 import time
+import datetime
 from urllib import request
 #############################################
 #                                           #
@@ -102,6 +103,7 @@ from urllib import request
 #############################################
 CACHED_KEYS = set()
 NEED_PING   = []
+THIS_MONTH  = datetime.date.today().month
 
 def ping_server(key):
     print("Pinging server with key: %s" % key)
@@ -113,7 +115,16 @@ def ping_server(key):
             CACHED_KEYS.remove(key)
     return False
 
+def clear_cache():
+    global THIS_MONTH
+
+    today = datetime.date.today()
+    if today.month != THIS_MONTH:
+        CACHED_KEYS.clear()
+    THIS_MONTH = today.month
+
 def valid_key(key):
+    clear_cache()
     if key in CACHED_KEYS:
         print("Using cached key")
         NEED_PING.append(key)
