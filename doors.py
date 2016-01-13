@@ -140,7 +140,7 @@ def verify_key(key):
     lock_door()
 
 def ping_keys():
-    while len(NEED_PING) > 0:
+    if len(NEED_PING) > 0:
         ping_server(NEED_PING[0])
         NEED_PING.pop(0)
 
@@ -164,8 +164,8 @@ def _do_read_rfid():
         key = string[1:11].decode() #exclude start x0A and stop x0D bytes
         print("Read key: %s" % key)
         verify_key(key)
-        ping_keys()
         RFID_SERIAL.flushInput() # ignore errors, no data
+    ping_keys()
 
 def read_rfid():
     try:
