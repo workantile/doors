@@ -120,6 +120,7 @@ def clear_cache():
 
     today = datetime.date.today()
     if today.month != THIS_MONTH:
+        print("Clearing key cache")
         CACHED_KEYS.clear()
     THIS_MONTH = today.month
 
@@ -158,9 +159,7 @@ RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
 
 def _do_read_rfid():
     string = RFID_SERIAL.read(12)
-    if len(string) == 0:
-        print("No tag read")
-    else:
+    if len(string) > 0:
         key = string[1:11].decode() #exclude start x0A and stop x0D bytes
         print("Read key: %s" % key)
         verify_key(key)
