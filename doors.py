@@ -106,8 +106,8 @@ NEED_PING   = []
 THIS_MONTH  = datetime.date.today().month
 
 def ping_server(key):
-    print("Pinging server with key: %s" % key)
-    with request.urlopen(SERVER + ("/%s" % key)) as f:
+    print("Pinging server with key: %s (%s/%s)" % (key, SERVER, key))
+    with request.urlopen("%s/%s" % (SERVER, key)) as f:
         if f.read().decode() == "OK":
             CACHED_KEYS.add(key)
             return True
