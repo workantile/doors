@@ -102,7 +102,7 @@ from urllib import request
 #                                           #
 #############################################
 CACHED_KEYS = set()
-NEED_PING   = []
+NEED_FLUSH  = []
 THIS_MONTH  = datetime.date.today().month
 
 def ping_server(key):
@@ -130,14 +130,14 @@ def verify_key(key):
     clear_cache()
     if key in CACHED_KEYS:
         print("Using cached key")
-        NEED_PING.append(key)
+        NEED_FLUSH.append(key)
         return True
     return ping_server(key)
 
-def ping_keys():
-    if len(NEED_PING) > 0:
-        ping_server(NEED_PING[0])
-        NEED_PING.pop(0)
+def flush_keys():
+    if len(NEED_FLUSH) > 0:
+        ping_server(NEED_FLUSH[0])
+        NEED_FLUSH.pop(0)
 
 
 #python-pyserial package. Not sure we need this. Grabbed based on
@@ -167,7 +167,7 @@ def read_rfid():
             unlock_door()
             time.sleep(5) # block for 5 seconds before resetting door
         lock_door()
-        ping_keys()
+        flush_keys()
     except Exception as e:
         print(e)
         lock_door()
