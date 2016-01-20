@@ -124,21 +124,15 @@ def clear_cache():
         CACHED_KEYS.clear()
     THIS_MONTH = today.month
 
-def valid_key(key):
+def verify_key(key):
+    print("Verifying key: %s" % key)
+    GPIO.output(YELLOW_LED, ON);
     clear_cache()
     if key in CACHED_KEYS:
         print("Using cached key")
         NEED_PING.append(key)
         return True
     return ping_server(key)
-
-# Blocks for 5 seconds before resetting the door
-def verify_key(key):
-    GPIO.output(YELLOW_LED, ON);
-    if valid_key(key) == True:
-        unlock_door()
-        time.sleep(5)
-    lock_door()
 
 def ping_keys():
     if len(NEED_PING) > 0:
@@ -157,18 +151,23 @@ import serial
 
 RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
 
-def _do_read_rfid():
+def read_key():
     string = RFID_SERIAL.read(12)
+    RFID_SERIAL.flushInput() # ignore errors, no data
     if len(string) > 0:
         key = string[1:11].decode() #exclude start x0A and stop x0D bytes
-        print("Read key: %s" % key)
-        verify_key(key)
-        RFID_SERIAL.flushInput() # ignore errors, no data
-    ping_keys()
+        if key.isalnum():
+            return key;
+    return None
 
 def read_rfid():
     try:
-        _do_read_rfid()
+        key = read_key()
+        if key and verify_key(key):
+            unlock_door()
+            time.sleep(5) # block for 5 seconds before resetting door
+        lock_door()
+        ping_keys()
     except Exception as e:
         print(e)
         lock_door()
