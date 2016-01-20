@@ -36,5 +36,5 @@ class Serial:
 			return "".encode()
 		raise Exception("Test Serial Exception")
 
-	def flushInput(self):
+	def reset_input_buffer():
 		pass

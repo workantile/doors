@@ -152,8 +152,8 @@ import serial
 RFID_SERIAL = serial.Serial(RFID_PATH, 2400, timeout=1)
 
 def read_key():
+    RFID_SERIAL.reset_input_buffer() # Clear input buffer before reading
     string = RFID_SERIAL.read(12)
-    RFID_SERIAL.flushInput() # ignore errors, no data
     if len(string) > 0:
         key = string[1:11].decode() #exclude start x0A and stop x0D bytes
         if key.isalnum():
